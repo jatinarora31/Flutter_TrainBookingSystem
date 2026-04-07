@@ -6,18 +6,18 @@ part 'stop.g.dart';
 @JsonSerializable()
 class Stop {
   final String id;
-  final String trainId;
-  final String stationId;
+  @JsonKey(name: 'stop_order')
   final int stopOrder;
+  @JsonKey(name: 'arrival_time')
   final DateTime? arrivalTime;
+  @JsonKey(name: 'departure_time')
   final DateTime? departureTime;
+  @JsonKey(name: 'distance_from_origin_km')
   final double distanceFromOriginKm;
   final StationInfo station;
 
   Stop({
     required this.id,
-    required this.trainId,
-    required this.stationId,
     required this.stopOrder,
     this.arrivalTime,
     this.departureTime,
@@ -25,23 +25,8 @@ class Stop {
     required this.station,
   });
 
-  factory Stop.fromJson(Map<String, dynamic> json) {
-    return Stop(
-      id: json['id'],
-      trainId: json['train_id'],
-      stationId: json['station_id'],
-      stopOrder: json['stop_order'],
-      arrivalTime: json['arrival_time'] != null
-          ? DateTime.parse(json['arrival_time'])
-          : null,
-      departureTime: json['departure_time'] != null
-          ? DateTime.parse(json['departure_time'])
-          : null,
-      distanceFromOriginKm:
-      (json['distance_from_origin_km'] as num).toDouble(),
-      station: StationInfo.fromJson(json['station']),
-    );
-  }
+  factory Stop.fromJson(Map<String, dynamic> json) =>
+      _$StopFromJson(json);
 
   String get formattedArrival {
     if (arrivalTime == null) return '--:--';

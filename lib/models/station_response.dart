@@ -5,7 +5,9 @@ part 'station_response.g.dart';
 
 @JsonSerializable()
 class StationResponse {
-  final List<Station> stations;
+
+  @JsonKey(name:'data')
+  final List<Station>? stations;
 
   StationResponse({required this.stations});
 

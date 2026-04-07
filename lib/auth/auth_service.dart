@@ -22,8 +22,8 @@ class AuthService {
       final data = response.data;
       print("LOGIN RESPONSE: $data");
       final token = data["token"];
-      final userEmail = data["user"]["email"];
-      final userPhone = data["user"]["phone"];
+      final userEmail = data["user"]?["email"] ?? email;
+      final userPhone = data["user"]?["phone"] ?? "";
       if (token != null) {
         await TokenService.saveToken(token,userEmail,userPhone);
         return true;

@@ -262,7 +262,7 @@ class TrainCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      schedule.formattedArrival,
+                      schedule.formattedDeparture,
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w800,
@@ -371,36 +371,37 @@ class TrainCard extends StatelessWidget {
             ),
           ),
 
-          if (schedule.delayMinutes > 0)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              decoration: const BoxDecoration(
-                color: Color(0xFFFFFBEB),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(18),
-                  bottomRight: Radius.circular(18),
-                ),
-              ),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.access_time,
-                    size: 14,
-                    color: Color(0xFFD97706),
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    "Delayed by ${schedule.delayMinutes} min",
-                    style: const TextStyle(
-                      color: Color(0xFFD97706),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          // if (schedule.delayMinutes > 0)
+          //   Container(
+          //     width: double.infinity,
+          //     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          //     decoration: const BoxDecoration(
+          //       color: Color(0xFFFFFBEB),
+          //       borderRadius: BorderRadius.only(
+          //         bottomLeft: Radius.circular(18),
+          //         bottomRight: Radius.circular(18),
+          //       ),
+          //     ),
+          //     child: Row(
+          //       children: [
+          //         const Icon(
+          //           Icons.access_time,
+          //           size: 14,
+          //           color: Color(0xFFD97706),
+          //         ),
+          //         const SizedBox(width: 6),
+          //         Text(
+          //           // "Delayed by ${schedule.delayMinutes} min",
+          //           "",
+          //           style: const TextStyle(
+          //             color: Color(0xFFD97706),
+          //             fontSize: 12,
+          //             fontWeight: FontWeight.w600,
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
         ],
       ),
     );

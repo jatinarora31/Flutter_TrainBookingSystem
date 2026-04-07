@@ -6,8 +6,8 @@ part 'schedule_info.g.dart';
 @JsonSerializable()
 class ScheduleInfo {
   final String id;
-  @JsonKey(name: 'train_id')
-  final String trainId;
+  // @JsonKey(name: 'train_id')
+  // final String? trainId;
   @JsonKey(name: 'travel_date')
   final String travelDate;
   @JsonKey(name: 'departure_time')
@@ -15,13 +15,12 @@ class ScheduleInfo {
   @JsonKey(name: 'expected_arrival_time')
   final DateTime? expectedArrivalTime;
   final String status;
-  @JsonKey(name: 'delay_minutes')
+  @JsonKey(name: 'delay_minutes', defaultValue: 0)
   final int delayMinutes;
   final TrainInfo train;
 
   ScheduleInfo({
     required this.id,
-    required this.trainId,
     required this.travelDate,
     required this.departureTime,
     required this.expectedArrivalTime,

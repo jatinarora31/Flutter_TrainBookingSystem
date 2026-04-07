@@ -13,6 +13,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   String? email;
   String? phone;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -21,16 +22,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _loadUser() async {
-    final prefs = await SharedPreferences.getInstance();
     setState(() {
-      email = prefs.getString("");
-      phone = prefs.getString("");
+      isLoading = true;
+    });
+    final userEmail = await TokenService.getUserEmail();
+    final userPhone = await TokenService.getUserPhone();
+    setState(() {
+      email = userEmail ?? "Not set";
+      phone = userPhone ?? "Not set";
+      isLoading = false;
     });
   }
 
+
   void _logout() async {
     await TokenService.clearToken();
-
     if (mounted) {
       context.go("/login");
     }
@@ -66,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  "",
+                  email ?? "User Email",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -84,9 +90,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               children: [
 
-                _buildTile(Icons.email, "Email", email ?? ""),
+                _buildTile(Icons.email, "Email", email!),
                 const SizedBox(height: 15),
-                _buildTile(Icons.phone, "Phone", phone ?? ""),
+                _buildTile(Icons.phone, "Phone", phone!),
 
                 const SizedBox(height: 40),
 

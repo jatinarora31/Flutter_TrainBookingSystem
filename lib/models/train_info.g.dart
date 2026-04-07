@@ -8,14 +8,18 @@ part of 'train_info.dart';
 
 TrainInfo _$TrainInfoFromJson(Map<String, dynamic> json) => TrainInfo(
   id: json['id'] as String,
-  trainNumber: json['trainNumber'] as String,
+  trainNumber: json['train_number'] as String,
   name: json['name'] as String,
-  trainType: json['trainType'] as String,
+  trainType: json['train_type'] as String,
+  rating: json['rating'] as String?,
+  grade: json['grade'] as String?,
 );
 
 Map<String, dynamic> _$TrainInfoToJson(TrainInfo instance) => <String, dynamic>{
   'id': instance.id,
-  'trainNumber': instance.trainNumber,
+  'train_number': instance.trainNumber,
   'name': instance.name,
-  'trainType': instance.trainType,
+  'train_type': instance.trainType,
+  'rating': instance.rating,
+  'grade': instance.grade,
 };

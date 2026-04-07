@@ -8,11 +8,11 @@ part of 'schedule.dart';
 
 Schedule _$ScheduleFromJson(Map<String, dynamic> json) => Schedule(
   id: json['id'] as String,
-  trainId: json['train_id'] as String,
-  travelDate: DateTime.parse(json['travel_date'] as String),
-  delayMinutes: (json['delay_minutes'] as num).toInt(),
-  departureTime: DateTime.parse(json['departure_time'] as String),
-  expectedArrivalTime: DateTime.parse(json['expected_arrival_time'] as String),
+  travelDate: json['travel_date'] as String,
+  departureTime: Schedule._dateTimeFromString(json['departure_time'] as String),
+  expectedArrivalTime: Schedule._dateTimeFromString(
+    json['expected_arrival_time'] as String,
+  ),
   status: json['status'] as String,
   train: Train.fromJson(json['train'] as Map<String, dynamic>),
   availability: Availability.fromJson(
@@ -22,12 +22,12 @@ Schedule _$ScheduleFromJson(Map<String, dynamic> json) => Schedule(
 
 Map<String, dynamic> _$ScheduleToJson(Schedule instance) => <String, dynamic>{
   'id': instance.id,
-  'train_id': instance.trainId,
-  'travel_date': instance.travelDate.toIso8601String(),
-  'departure_time': instance.departureTime.toIso8601String(),
-  'expected_arrival_time': instance.expectedArrivalTime.toIso8601String(),
+  'travel_date': instance.travelDate,
+  'departure_time': Schedule._dateTimeToString(instance.departureTime),
+  'expected_arrival_time': Schedule._dateTimeToString(
+    instance.expectedArrivalTime,
+  ),
   'status': instance.status,
-  'delay_minutes': instance.delayMinutes,
   'train': instance.train,
   'availability': instance.availability,
 };

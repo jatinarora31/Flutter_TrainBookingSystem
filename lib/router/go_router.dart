@@ -5,13 +5,13 @@ import '../screens/auth/login_screen.dart';
 import '../screens/auth/register_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/main_screen.dart';
-import '../screens/my_booking.dart';
+import '../screens/my_booking_screen.dart';
 import '../screens/schedule_screen.dart';
 import '../screens/search_screen.dart';
 import '../screens/widgets/profile_screen.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/register',
+  initialLocation: '/home',
 
   routes: [
     ShellRoute(
@@ -64,7 +64,7 @@ final GoRouter appRouter = GoRouter(
 
         GoRoute(
           path: '/my_booking',
-          builder: (context, state) => MyBooking(),
+          builder: (context, state) => MyBookingsScreen(),
         ),
 
         GoRoute(

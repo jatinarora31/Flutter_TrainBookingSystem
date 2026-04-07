@@ -7,58 +7,47 @@ class Availability {
   @JsonKey(name: 'available_seats')
   final int availableSeats;
   @JsonKey(name: 'coach_type_availability')
-  final CoachTypeGroup coachTypeAvailability;
+  final CoachTypeAvailability coachTypeAvailability;
 
   Availability({
     required this.availableSeats,
-    required this.coachTypeAvailability
+    required this.coachTypeAvailability,
   });
 
   factory Availability.fromJson(Map<String, dynamic> json) =>
       _$AvailabilityFromJson(json);
-
-  Map<String, dynamic> toJson() => _$AvailabilityToJson(this);
-
-}
-
-@JsonSerializable(fieldRename: FieldRename.snake)
-class CoachTypeGroup {
-  final CoachTypeAvailability oneAc;
-  final CoachTypeAvailability twoAc;
-  final CoachTypeAvailability sleeper;
-
-  CoachTypeGroup({
-    required this.oneAc,
-    required this.twoAc,
-    required this.sleeper,
-  });
-
-  factory CoachTypeGroup.fromJson(Map<String, dynamic> json) =>
-      _$CoachTypeGroupFromJson(json);
-
-  Map<String, dynamic> toJson() => _$CoachTypeGroupToJson(this);
 }
 
 @JsonSerializable()
 class CoachTypeAvailability {
+  @JsonKey(name: '1ac')
+  final CoachAvailability oneAc;
+  final CoachAvailability sleeper;
+  @JsonKey(name: '2ac')
+  final CoachAvailability twoAc;
+
+  CoachTypeAvailability({
+    required this.oneAc,
+    required this.sleeper,
+    required this.twoAc,
+  });
+
+  factory CoachTypeAvailability.fromJson(Map<String, dynamic> json) =>
+      _$CoachTypeAvailabilityFromJson(json);
+}
+
+@JsonSerializable()
+class CoachAvailability {
   @JsonKey(name: 'total_active_seats')
   final int totalActiveSeats;
-
   @JsonKey(name: 'available_seats')
   final int availableSeats;
 
-  CoachTypeAvailability({
+  CoachAvailability({
     required this.totalActiveSeats,
     required this.availableSeats,
   });
 
-  factory CoachTypeAvailability.fromJson(Map<String, dynamic> json) {
-    return CoachTypeAvailability(
-      totalActiveSeats: (json['total_active_seats'] as num?)?.toInt() ?? 0,
-      availableSeats: (json['available_seats'] as num?)?.toInt() ?? 0,
-    );
-  }
-
-  Map<String, dynamic> toJson() => _$CoachTypeAvailabilityToJson(this);
+  factory CoachAvailability.fromJson(Map<String, dynamic> json) =>
+      _$CoachAvailabilityFromJson(json);
 }
-

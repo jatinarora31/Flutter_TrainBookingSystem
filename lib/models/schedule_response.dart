@@ -5,23 +5,10 @@ part 'schedule_response.g.dart';
 
 @JsonSerializable()
 class ScheduleResponse {
-
-  @JsonKey(name: 'travel_date')
-  final String travelDate;
-
-  @JsonKey(name: 'src_station_id')
-  final String srcStationId;
-
-  @JsonKey(name: 'dst_station_id')
-  final String dstStationId;
-
-  @JsonKey(name: 'schedules')
+  @JsonKey(name: 'data')
   final List<Schedule> schedules;
 
   ScheduleResponse({
-    required this.travelDate,
-    required this.dstStationId,
-    required this.srcStationId,
     required this.schedules
   });
 

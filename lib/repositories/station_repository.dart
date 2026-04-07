@@ -13,6 +13,6 @@ class StationRepository {
     print("RES - ------------ API CALLED -----------------------");
     final res = await _api.getAllStations();
     print("RES - ------------ $res ------------------------ ${res.stations}");
-    return res.stations;
+    return res.stations ?? [];
   }
 }

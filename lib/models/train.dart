@@ -16,12 +16,16 @@ class Train {
 
   @JsonKey(name: 'train_type')
   final String trainType;
+  final String rating;
+  final String grade;
 
   Train({
     required this.id,
     required this.trainNumber,
     required this.name,
-    required this.trainType
+    required this.trainType,
+    required this.rating,
+    required this.grade,
   });
 
   factory Train.fromJson(Map<String, dynamic> json) =>

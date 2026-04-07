@@ -8,45 +8,45 @@ part 'schedule.g.dart';
 class Schedule {
   final String id;
 
-  @JsonKey(name: 'train_id')
-  final String trainId;
-
   @JsonKey(name: 'travel_date')
-  final DateTime travelDate;
+  final String travelDate;
 
-  @JsonKey(name: 'departure_time')
+  @JsonKey(
+    name: 'departure_time',
+    fromJson: _dateTimeFromString,
+    toJson: _dateTimeToString,
+  )
   final DateTime departureTime;
 
-  @JsonKey(name: 'expected_arrival_time')
+  @JsonKey(
+    name: 'expected_arrival_time',
+    fromJson: _dateTimeFromString,
+    toJson: _dateTimeToString,
+  )
   final DateTime expectedArrivalTime;
 
-  @JsonKey(name: 'status')
   final String status;
 
-  @JsonKey(name: 'delay_minutes')
-  final int delayMinutes;
-
-  @JsonKey(name: 'train')
   final Train train;
-
   final Availability availability;
 
   Schedule({
     required this.id,
-    required this.trainId,
     required this.travelDate,
-    required this.delayMinutes,
     required this.departureTime,
     required this.expectedArrivalTime,
     required this.status,
     required this.train,
-    required this.availability
+    required this.availability,
   });
 
   factory Schedule.fromJson(Map<String, dynamic> json) =>
       _$ScheduleFromJson(json);
 
   Map<String, dynamic> toJson() => _$ScheduleToJson(this);
+
+  static DateTime _dateTimeFromString(String date) => DateTime.parse(date);
+  static String _dateTimeToString(DateTime date) => date.toIso8601String();
 
   String get formattedDeparture =>
       '${departureTime.hour.toString().padLeft(2, '0')}:${departureTime.minute.toString().padLeft(2, '0')}';
@@ -58,5 +58,4 @@ class Schedule {
     final diff = expectedArrivalTime.difference(departureTime);
     return '${diff.inHours}h ${diff.inMinutes % 60}m';
   }
-
 }

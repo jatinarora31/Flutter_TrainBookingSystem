@@ -7,30 +7,26 @@ part of 'fare.dart';
 // **************************************************************************
 
 FareOptions _$FareOptionsFromJson(Map<String, dynamic> json) => FareOptions(
+  oneAc: json['1ac'] == null
+      ? null
+      : FareDetail.fromJson(json['1ac'] as Map<String, dynamic>),
+  twoAc: json['2ac'] == null
+      ? null
+      : FareDetail.fromJson(json['2ac'] as Map<String, dynamic>),
   sleeper: json['sleeper'] == null
       ? null
-      : FareInfo.fromJson(json['sleeper'] as Map<String, dynamic>),
-  oneAc: json['oneAc'] == null
-      ? null
-      : FareInfo.fromJson(json['oneAc'] as Map<String, dynamic>),
-  twoAc: json['twoAc'] == null
-      ? null
-      : FareInfo.fromJson(json['twoAc'] as Map<String, dynamic>),
+      : FareDetail.fromJson(json['sleeper'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$FareOptionsToJson(FareOptions instance) =>
     <String, dynamic>{
+      '1ac': instance.oneAc,
+      '2ac': instance.twoAc,
       'sleeper': instance.sleeper,
-      'oneAc': instance.oneAc,
-      'twoAc': instance.twoAc,
     };
 
-FareInfo _$FareInfoFromJson(Map<String, dynamic> json) => FareInfo(
-  farePerSeat: (json['farePerSeat'] as num).toDouble(),
-  distanceKm: (json['distanceKm'] as num).toInt(),
-);
+FareDetail _$FareDetailFromJson(Map<String, dynamic> json) =>
+    FareDetail(farePerSeat: json['fare_per_seat'] as String);
 
-Map<String, dynamic> _$FareInfoToJson(FareInfo instance) => <String, dynamic>{
-  'farePerSeat': instance.farePerSeat,
-  'distanceKm': instance.distanceKm,
-};
+Map<String, dynamic> _$FareDetailToJson(FareDetail instance) =>
+    <String, dynamic>{'fare_per_seat': instance.farePerSeat};

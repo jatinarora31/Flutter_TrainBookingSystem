@@ -8,26 +8,22 @@ part of 'stop.dart';
 
 Stop _$StopFromJson(Map<String, dynamic> json) => Stop(
   id: json['id'] as String,
-  trainId: json['trainId'] as String,
-  stationId: json['stationId'] as String,
-  stopOrder: (json['stopOrder'] as num).toInt(),
-  arrivalTime: json['arrivalTime'] == null
+  stopOrder: (json['stop_order'] as num).toInt(),
+  arrivalTime: json['arrival_time'] == null
       ? null
-      : DateTime.parse(json['arrivalTime'] as String),
-  departureTime: json['departureTime'] == null
+      : DateTime.parse(json['arrival_time'] as String),
+  departureTime: json['departure_time'] == null
       ? null
-      : DateTime.parse(json['departureTime'] as String),
-  distanceFromOriginKm: (json['distanceFromOriginKm'] as num).toDouble(),
+      : DateTime.parse(json['departure_time'] as String),
+  distanceFromOriginKm: (json['distance_from_origin_km'] as num).toDouble(),
   station: StationInfo.fromJson(json['station'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$StopToJson(Stop instance) => <String, dynamic>{
   'id': instance.id,
-  'trainId': instance.trainId,
-  'stationId': instance.stationId,
-  'stopOrder': instance.stopOrder,
-  'arrivalTime': instance.arrivalTime?.toIso8601String(),
-  'departureTime': instance.departureTime?.toIso8601String(),
-  'distanceFromOriginKm': instance.distanceFromOriginKm,
+  'stop_order': instance.stopOrder,
+  'arrival_time': instance.arrivalTime?.toIso8601String(),
+  'departure_time': instance.departureTime?.toIso8601String(),
+  'distance_from_origin_km': instance.distanceFromOriginKm,
   'station': instance.station,
 };

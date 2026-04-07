@@ -11,6 +11,8 @@ Train _$TrainFromJson(Map<String, dynamic> json) => Train(
   trainNumber: json['train_number'] as String,
   name: json['name'] as String,
   trainType: json['train_type'] as String,
+  rating: json['rating'] as String,
+  grade: json['grade'] as String,
 );
 
 Map<String, dynamic> _$TrainToJson(Train instance) => <String, dynamic>{
@@ -18,4 +20,6 @@ Map<String, dynamic> _$TrainToJson(Train instance) => <String, dynamic>{
   'train_number': instance.trainNumber,
   'name': instance.name,
   'train_type': instance.trainType,
+  'rating': instance.rating,
+  'grade': instance.grade,
 };

@@ -8,24 +8,16 @@ part of 'seat.dart';
 
 Seat _$SeatFromJson(Map<String, dynamic> json) => Seat(
   id: json['id'] as String,
-  seatNumber: json['seatNumber'] as String,
-  seatType: json['seatType'] as String,
-  isActive: json['isActive'] as bool,
+  coachId: json['coach_id'] as String,
+  seatNumber: json['seat_number'] as String,
+  seatType: json['seat_type'] as String,
+  isActive: json['is_active'] as bool,
 );
 
 Map<String, dynamic> _$SeatToJson(Seat instance) => <String, dynamic>{
   'id': instance.id,
-  'seatNumber': instance.seatNumber,
-  'seatType': instance.seatType,
-  'isActive': instance.isActive,
-};
-
-SeatMap _$SeatMapFromJson(Map<String, dynamic> json) => SeatMap(
-  unavailableSeatIds: (json['unavailableSeatIds'] as List<dynamic>)
-      .map((e) => e as String)
-      .toList(),
-);
-
-Map<String, dynamic> _$SeatMapToJson(SeatMap instance) => <String, dynamic>{
-  'unavailableSeatIds': instance.unavailableSeatIds,
+  'coach_id': instance.coachId,
+  'seat_number': instance.seatNumber,
+  'seat_type': instance.seatType,
+  'is_active': instance.isActive,
 };

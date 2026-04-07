@@ -8,10 +8,10 @@ part of 'station_response.dart';
 
 StationResponse _$StationResponseFromJson(Map<String, dynamic> json) =>
     StationResponse(
-      stations: (json['stations'] as List<dynamic>)
-          .map((e) => Station.fromJson(e as Map<String, dynamic>))
+      stations: (json['data'] as List<dynamic>?)
+          ?.map((e) => Station.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
 Map<String, dynamic> _$StationResponseToJson(StationResponse instance) =>
-    <String, dynamic>{'stations': instance.stations};
+    <String, dynamic>{'data': instance.stations};
