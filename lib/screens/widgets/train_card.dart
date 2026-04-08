@@ -51,6 +51,16 @@ class TrainCard extends StatelessWidget {
   void _showLoginDialog(BuildContext context) {
     const primaryColor = Color(0xFF2A80D8);
 
+    // Store data in a static variable or pass through route
+    final bookingData = {
+      'scheduleId': schedule.id,
+      'srcStationId': srcStationId,
+      'dstStationId': dstStationId,
+      'srcStationName': srcStationName,
+      'dstStationName': dstStationName,
+      'travelDate': travelDate,
+    };
+
     showDialog(
       context: context,
       builder: (context) {
@@ -71,17 +81,13 @@ class TrainCard extends StatelessWidget {
                     color: primaryColor,
                   ),
                 ),
-
                 const SizedBox(height: 12),
-
                 const Text(
                   "Please login to continue booking.",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 14),
                 ),
-
                 const SizedBox(height: 20),
-
                 Row(
                   children: [
                     Expanded(
@@ -101,25 +107,17 @@ class TrainCard extends StatelessWidget {
                         ),
                       ),
                     ),
-
                     const SizedBox(width: 12),
-
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context);
+                          // Use push with extra data
                           context.push(
                             '/login',
                             extra: {
                               'redirect': '/home/schedules/book',
-                              'data': {
-                                'scheduleId': schedule.id,
-                                'srcStationId': srcStationId,
-                                'dstStationId': dstStationId,
-                                'srcStationName': srcStationName,
-                                'dstStationName': dstStationName,
-                                'travelDate': travelDate,
-                              },
+                              'data': bookingData,
                             },
                           );
                         },
@@ -151,6 +149,7 @@ class TrainCard extends StatelessWidget {
       _showLoginDialog(context);
       return;
     }
+    // Use the correct nested path - note: no leading slash
     context.push(
       '/home/schedules/book',
       extra: {

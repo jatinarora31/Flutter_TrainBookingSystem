@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quick_ticket/screens/booking_screen.dart';
+import 'package:quick_ticket/screens/setting_screen.dart';
 import '../network/token_service.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/register_screen.dart';
@@ -12,7 +14,6 @@ import '../screens/widgets/profile_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/home',
-
   routes: [
     ShellRoute(
       builder: (context, state, child) {
@@ -21,19 +22,22 @@ final GoRouter appRouter = GoRouter(
       routes: [
         GoRoute(
           path: '/home',
-          builder: (context, state) => HomeScreen(),
+          builder: (context, state) => const HomeScreen(),
           routes: [
             GoRoute(
-              path: "/search",
+              path: "search",
               builder: (context, state) {
                 final type = state.extra as String?;
                 return SearchScreen(type: type ?? '');
               },
             ),
             GoRoute(
-              path: '/schedules',
+              path: 'schedules',
               builder: (context, state) {
-                final extra = state.extra as Map<String, dynamic>;
+                final extra = state.extra as Map<String, dynamic>?;
+                if (extra == null) {
+                  return const SizedBox.shrink();
+                }
                 return ScheduleScreen(
                   srcStationId: extra['srcStationId'],
                   dstStationId: extra['dstStationId'],
@@ -44,9 +48,13 @@ final GoRouter appRouter = GoRouter(
               },
               routes: [
                 GoRoute(
-                  path: '/book',
-                  builder: (context,state) {
-                    final extra = state.extra as Map<String,dynamic>;
+                  path: 'book',  // Note: no leading slash
+                  name: 'booking', // Add a name for easier navigation
+                  builder: (context, state) {
+                    final extra = state.extra as Map<String, dynamic>?;
+                    if (extra == null) {
+                      return const SizedBox.shrink();
+                    }
                     return BookingScreen(
                       scheduleId: extra['scheduleId'],
                       srcStationId: extra['srcStationId'],
@@ -55,52 +63,39 @@ final GoRouter appRouter = GoRouter(
                       dstStationName: extra['dstStationName'],
                       travelDate: extra['travelDate'],
                     );
-                  }
-                )
-              ]
-            )
+                  },
+                ),
+              ],
+            ),
           ],
         ),
-
         GoRoute(
           path: '/my_booking',
-          builder: (context, state) => MyBookingsScreen(),
+          builder: (context, state) => const MyBookingsScreen(),
         ),
-
         GoRoute(
-          path: '/profile',
+          path: '/setting',
           builder: (context, state) {
             final isLoggedIn = TokenService.isLoggedInSync();
-
-            return isLoggedIn
-                ? ProfileScreen()
-                : LoginScreen();
+            return isLoggedIn ? const SettingsScreen() : const LoginScreen();
           },
+          routes: [
+            GoRoute(
+              path: '/profile',
+              builder: (context, state) => const ProfileScreen(),
+            ),
+            GoRoute(
+              path: '/login',
+              builder: (context, state) => const LoginScreen(),
+            ),
+            GoRoute(
+              path: '/register',
+              builder: (context, state) => const RegisterScreen(),
+            ),
+          ]
         ),
 
-        GoRoute(
-          path: '/login',
-          builder: (context, state) => LoginScreen(),
-        ),
 
-        GoRoute(
-          path: '/register',
-          builder: (context, state) => RegisterScreen(),
-        ),
-
-        GoRoute(
-          path: '/home/schedules',
-          builder: (context, state) {
-            final extra = state.extra as Map<String, dynamic>;
-            return ScheduleScreen(
-              srcStationId: extra['srcStationId'],
-              dstStationId: extra['dstStationId'],
-              srcStationName: extra['srcStationName'],
-              dstStationName: extra['dstStationName'],
-              travelDate: extra['travelDate'],
-            );
-          },
-        ),
       ],
     ),
   ],

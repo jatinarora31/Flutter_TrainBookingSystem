@@ -6,7 +6,7 @@ import 'network/token_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await TokenService.loadToken();
+  await TokenService.loadUserData();
   runApp(const MyApp());
 }
 

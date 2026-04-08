@@ -56,6 +56,7 @@ import 'package:quick_ticket/screens/passenger_details.dart';
       _tabController = TabController(length: 3, vsync: this);
       repo = ScheduleRepository();
       _future = repo.getSchedule(widget.scheduleId, widget.srcStationId, widget.dstStationId,);
+      print("schedules ------------$_future");
     }
 
     @override

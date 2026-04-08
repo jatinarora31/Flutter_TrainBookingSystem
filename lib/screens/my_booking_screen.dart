@@ -1,5 +1,6 @@
 // my_bookings_screen.dart
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:quick_ticket/repositories/booking_repository.dart';
 import 'package:quick_ticket/screens/booking_success_screen.dart';
 
@@ -137,7 +138,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              Navigator.pop(context);
+              context.go("/home");
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: kPrimary,
@@ -189,7 +190,7 @@ class _BookingCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: kPrimary.withOpacity(0.2),
+              color: kPrimary,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
@@ -201,18 +202,19 @@ class _BookingCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: isCancelled
-                        ? Colors.red.withOpacity(0.1)
+                        ? Colors.red
                         : isUpcoming
-                        ? kSuccess.withOpacity(0.1)
-                        : kTextMuted.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
+                        ? Colors.orange
+                        : Colors.green,
+                    borderRadius: BorderRadius.all(Radius.circular(12))
                   ),
                   child: Text(
                     isCancelled ? 'CANCELLED' : (isUpcoming ? 'UPCOMING' : 'COMPLETED'),
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
-                      color: Colors.black,
+                      color: Colors.white,
+                      // backgroundColor: isCancelled ? Colors.red : (isUpcoming ? Colors.orange : Colors.green),
                     ),
                   ),
                 ),
@@ -221,7 +223,7 @@ class _BookingCard extends StatelessWidget {
                   booking['booking_ref'],
                   style: TextStyle(
                     fontSize: 12,
-                    color: kTextMuted,
+                    color: Colors.white,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -234,7 +236,6 @@ class _BookingCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Train Info
                 Row(
                   children: [
                     Container(

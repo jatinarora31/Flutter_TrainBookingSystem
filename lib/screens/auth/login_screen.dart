@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quick_ticket/network/dio_client.dart';
+import 'package:quick_ticket/network/token_service.dart';
 import '../../auth/auth_service.dart';
+import '../booking_screen.dart';
 import '../widgets/app_bar.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -11,7 +14,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -24,31 +26,72 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _login() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    setState(() => isLoading = true);
-
-    final success = await AuthService.login(
-      email: emailController.text.trim(),
-      password: passwordController.text.trim(),
-    );
-
-    setState(() => isLoading = false);
-
-    if (success) {
-      final extra = GoRouterState.of(context).extra as Map<String, dynamic>?;
-      final redirectRoute = extra?['redirect'];
-      final redirectData = extra?['data'];
-      if (redirectRoute != null) {
-        context.go(redirectRoute, extra: redirectData);
-      } else {
-        context.go('/home');
-      }
-    } else {
+  Future<void> _login() async {
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Invalid email or password")),
+        const SnackBar(content: Text("Please enter email and password")),
       );
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final result = await AuthService.login(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+
+      if (result['success']) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result['message']),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        if (mounted) {
+          final extra = GoRouterState.of(context).extra;
+          String? redirectRoute;
+          dynamic redirectData;
+
+          if (extra is Map<String,dynamic>) {
+            redirectRoute = extra['redirect'] as String?;
+            redirectData = extra['data'];
+          }
+
+          print("Redirect route: $redirectRoute");
+          print("Redirect data: $redirectData");
+
+          if (redirectRoute != null && redirectRoute.isNotEmpty) {
+            context.go(redirectRoute, extra: redirectData);
+          } else {
+            context.go('/home');
+          }
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result['message']),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      print("Login error: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Login failed: ${e.toString().replaceAll('Exception:', '')}")),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -63,13 +106,26 @@ class _LoginScreenState extends State<LoginScreen> {
           key: _formKey,
           child: Column(
             children: [
-              const SizedBox(height: 50),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Login here!",
+                    style: TextStyle(
+                      color: kPrimary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: emailController,
                 decoration: _inputDecoration("Email", Icons.email),
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) =>
-                    value!.isEmpty ? "Please enter email" : null,
+                value == null || value.isEmpty ? "Please enter email" : null,
               ),
               const SizedBox(height: 20),
               TextFormField(
@@ -77,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: _inputDecoration("Password", Icons.lock),
                 obscureText: true,
                 validator: (value) =>
-                    value!.isEmpty ? "Please enter password" : null,
+                value == null || value.isEmpty ? "Please enter password" : null,
               ),
               const SizedBox(height: 30),
               SizedBox(
@@ -86,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: ElevatedButton(
                   onPressed: isLoading ? null : _login,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2A80D8),
+                    backgroundColor: kPrimary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -94,15 +150,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
                       : const Text(
-                          "Login",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
+                    "Login",
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
-                  context.go("/register");
+                  context.go("/setting/register");
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -111,9 +167,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       "Don't have an account?",
                       style: TextStyle(color: Colors.black),
                     ),
-                    const Text(
+                    Text(
                       " Sign Up",
-                      style: TextStyle(color: Color(0xFF2A80D8)),
+                      style: TextStyle(color: kPrimary),
                     ),
                   ],
                 ),
@@ -135,6 +191,14 @@ class _LoginScreenState extends State<LoginScreen> {
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide.none,
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Colors.red),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: Colors.red),
       ),
     );
   }

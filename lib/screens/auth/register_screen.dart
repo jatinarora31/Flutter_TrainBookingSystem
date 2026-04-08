@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quick_ticket/screens/booking_screen.dart';
 
 import '../../auth/auth_service.dart';
 import '../widgets/app_bar.dart';
@@ -17,6 +18,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final phoneController = TextEditingController();
+  final fullNameController = TextEditingController();
+  final addressController = TextEditingController();
+  final userNameController = TextEditingController();
 
   bool isLoading = false;
 
@@ -26,6 +30,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     passwordController.dispose();
     confirmPasswordController.dispose();
     phoneController.dispose();
+    fullNameController.dispose();
+    addressController.dispose();
+    userNameController.dispose();
     super.dispose();
   }
 
@@ -34,20 +41,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     setState(() => isLoading = true);
 
+    if(!(passwordController.text == confirmPasswordController.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Password and Confirm password must be same"))
+      );
+    }
+
     final success = await AuthService.register(
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
       confirmPassword: confirmPasswordController.text.trim(),
       phone: phoneController.text.trim(),
+      fullName: fullNameController.text.trim(),
+      address: addressController.text.trim(),
+      userName: userNameController.text.trim()
     );
 
     setState(() => isLoading = false);
 
-    if (success) {
+    if (success == true) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Signup successful")),
       );
-      context.go("/login");
+      context.go("/setting/login");
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Signup failed")),
@@ -61,12 +77,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
       backgroundColor: Colors.white,
       appBar: AppBarSection(title: "Welcome to Quick Ticket"),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 8),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              const SizedBox(height: 30),
+              Row(mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Enter your details for", style: TextStyle(color: Colors.black,fontSize: 20)),
+                  Text(" SignUp", style: TextStyle(color: kPrimary,fontWeight: FontWeight.bold,fontSize: 25))
+                ],
+              ),
+              const SizedBox(height: 14),
+              TextFormField(
+                controller: fullNameController,
+                decoration: _inputDecoration("Full name", Icons.person),
+                validator: (value) =>
+                value!.isEmpty ? "Please enter your name" : null,
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: userNameController,
+                decoration: _inputDecoration("Username", Icons.verified_user_rounded),
+                validator: (value) =>
+                value!.isEmpty ? "Please enter your username" : null,
+              ),
+              const SizedBox(height: 10),
               TextFormField(
                 controller: emailController,
                 decoration: _inputDecoration("Email", Icons.email),
@@ -74,14 +110,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 validator: (value) =>
                 value!.isEmpty ? "Please enter your email" : null,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               TextFormField(
                 controller: phoneController,
                 decoration: _inputDecoration("Phone", Icons.person),
                 validator: (value) =>
                 value!.isEmpty ? "Please enter your phone" : null,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: addressController,
+                decoration: _inputDecoration("Address", Icons.home),
+                validator: (value) =>
+                value!.isEmpty ? "Please enter your address" : null,
+              ),
+              const SizedBox(height: 10),
               TextFormField(
                 controller: passwordController,
                 decoration: _inputDecoration("Password", Icons.lock),
@@ -89,7 +132,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 validator: (value) =>
                 value!.isEmpty ? "Please enter password" : null,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               TextFormField(
                 controller: confirmPasswordController,
                 decoration: _inputDecoration("Confirm Password", Icons.lock),
@@ -97,7 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 validator: (value) =>
                 value!.isEmpty ? "Please confirm password" : null,
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 15),
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -115,7 +158,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -138,9 +181,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 5),
               TextButton(
-                onPressed: () => context.go("/login"),
+                onPressed: () => context.go("/setting/login"),
                 child: Row(mainAxisAlignment: MainAxisAlignment.center ,children: [
                   const Text(
                     "Already have an account?",

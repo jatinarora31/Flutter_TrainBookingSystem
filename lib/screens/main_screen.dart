@@ -25,7 +25,7 @@ class MainScreen extends StatelessWidget {
               context.go("/my_booking");
               break;
             case 2:
-              context.go("/profile");
+              context.go("/setting");
               break;
           }
         },
