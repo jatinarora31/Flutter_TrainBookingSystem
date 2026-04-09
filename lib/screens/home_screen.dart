@@ -12,7 +12,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarSection(title: "Quick Ticket"),
-      body: SafeArea(child: _HomeBody())
+      body: SafeArea(child: _HomeBody()),
+        backgroundColor: Color(0xFFEDEDED),
     );
   }
 }
@@ -27,8 +28,6 @@ class _HomeBody extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20),
-          HeaderRow(),
           SizedBox(height: 20),
           SearchSection()
         ],

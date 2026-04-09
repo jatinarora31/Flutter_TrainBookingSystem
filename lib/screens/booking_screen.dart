@@ -10,6 +10,7 @@ import 'package:quick_ticket/screens/passenger_details.dart';
 
   const kPrimary = Color(0xFF2A80D8);
   const kPrimaryLight = Color(0xFF2A80D8);
+  const kSecondaryLight = Color(0xFFC2E2FF);
   const kBackground = Color(0xFFF0F4FF);
   const kCardBg = Colors.white;
   const kTextDark = Color(0xFF1A1F36);
@@ -53,10 +54,9 @@ import 'package:quick_ticket/screens/passenger_details.dart';
     @override
     void initState() {
       super.initState();
-      _tabController = TabController(length: 3, vsync: this);
+      _tabController = TabController(length: 3,vsync: this);
       repo = ScheduleRepository();
       _future = repo.getSchedule(widget.scheduleId, widget.srcStationId, widget.dstStationId,);
-      print("schedules ------------$_future");
     }
 
     @override

@@ -48,8 +48,8 @@ final GoRouter appRouter = GoRouter(
               },
               routes: [
                 GoRoute(
-                  path: 'book',  // Note: no leading slash
-                  name: 'booking', // Add a name for easier navigation
+                  path: 'book',
+                  name: 'booking',
                   builder: (context, state) {
                     final extra = state.extra as Map<String, dynamic>?;
                     if (extra == null) {
@@ -75,28 +75,24 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: '/setting',
-          builder: (context, state) {
-            final isLoggedIn = TokenService.isLoggedInSync();
-            return isLoggedIn ? const SettingsScreen() : const LoginScreen();
-          },
+          builder: (context, state) => SettingsScreen(),
           routes: [
             GoRoute(
               path: '/profile',
               builder: (context, state) => const ProfileScreen(),
             ),
-            GoRoute(
-              path: '/login',
-              builder: (context, state) => const LoginScreen(),
-            ),
-            GoRoute(
-              path: '/register',
-              builder: (context, state) => const RegisterScreen(),
-            ),
+
           ]
         ),
-
-
       ],
     ),
+    GoRoute(
+      path: '/login',
+      builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/register',
+      builder: (context, state) => const RegisterScreen(),
+    )
   ],
 );

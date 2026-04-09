@@ -158,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
-                  context.go("/setting/register");
+                  context.go("/register");
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

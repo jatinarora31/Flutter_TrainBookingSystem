@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quick_ticket/repositories/station_repository.dart';
 import 'package:quick_ticket/router/go_router.dart';
 
+import 'cubit/station_cubit.dart';
 import 'network/token_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await TokenService.loadUserData();
-  runApp(const MyApp());
+  runApp(const MyApp(),);
 }
 
 class MyApp extends StatelessWidget {
@@ -15,6 +18,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(routerConfig: appRouter);
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => StationCubit(StationRepository()),
+        ),
+      ],
+      child: MaterialApp.router(routerConfig: appRouter, debugShowCheckedModeBanner: false,),
+    );
   }
 }

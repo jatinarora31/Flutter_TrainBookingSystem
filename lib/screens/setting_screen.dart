@@ -1,9 +1,6 @@
-
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:quick_ticket/network/token_service.dart';
-import 'package:quick_ticket/screens/auth/login_screen.dart';
-import 'package:quick_ticket/screens/main_screen.dart';
+import 'package:quick_ticket/screens/widgets/login_dialog.dart';
 import 'package:quick_ticket/screens/widgets/profile_screen.dart';
 
 import 'booking_screen.dart';
@@ -11,177 +8,306 @@ import 'my_booking_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
   @override
   State<SettingsScreen> createState() => _SettingScreen();
 }
 
 class _SettingScreen extends State<SettingsScreen> {
-
   String? fullName;
+  bool isLoggedIn = false;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadName();
+    _checkLoginStatus();
   }
 
-  void _loadName() async {
-    final response = await TokenService.getUserFullName();
+  Future<void> _checkLoginStatus() async {
     setState(() {
-      fullName = response ?? "Not set";
+      isLoading = true;
     });
+
+    final loggedIn = await TokenService.isLoggedIn();
+
+    if (loggedIn) {
+      final name = await TokenService.getUserFullName();
+      setState(() {
+        isLoggedIn = true;
+        fullName = name ?? "User";
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        isLoggedIn = false;
+        fullName = null;
+        isLoading = false;
+      });
+    }
+  }
+
+  void _showLoginDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return LoginDialog(
+          onLoginSuccess: () {
+            _checkLoginStatus();
+          },
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kBackground,
+      backgroundColor: Color(0xFFEDEDED),
       appBar: AppBar(
+        centerTitle: true,
+        shape: const Border(
+          bottom: BorderSide(color: Colors.black, width: 0.1),
+        ),
         title: Padding(
-          padding: EdgeInsets.all(1),
+          padding: const EdgeInsets.all(1),
           child: Row(
             children: [
-              const Icon(Icons.settings),
-              const SizedBox(width: 12),
               const Text(
                 'Settings',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              )
+                style: TextStyle(fontWeight: FontWeight.w400,color: Colors.black),
+              ),
             ],
           ),
         ),
-        backgroundColor: kPrimary,
+        backgroundColor: Colors.white,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
-      body: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.all(16),
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: kCardBg,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: kPrimary.withOpacity(0.08),
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Row(
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator(color: kPrimary))
+          : Column(
               children: [
                 Container(
-                  width: 70,
-                  height: 70,
+                  margin: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: kPrimary.withOpacity(0.1),
-                    shape: BoxShape.circle,
+                    color: kCardBg,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: kPrimary.withOpacity(0.08),
+                        blurRadius: 16,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                  child: const Icon(
-                    Icons.person,
-                    size: 40,
-                    color: kPrimary,
-                  ),
+                  child: isLoggedIn
+                      ? _buildLoggedInProfile()
+                      : _buildLoggedOutProfile(),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
+                const SizedBox(height: 8),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: kCardBg,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: kPrimary.withOpacity(0.08),
+                        blurRadius: 16,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 4),
-                      Text(
-                        ' Welcome',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: kTextMuted,
-                        ),
+                      _SettingsTile(
+                        icon: Icons.person_outline,
+                        title: 'Profile',
+                        subtitle: isLoggedIn
+                            ? 'View and edit your profile information'
+                            : 'Login to view profile',
+                        onTap: () {
+                          if (isLoggedIn) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ProfileScreen(),
+                              ),
+                            );
+                          } else {
+                            _showLoginDialog();
+                          }
+                        },
                       ),
-                      Text(
-                        fullName ?? "Nil",
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: kTextDark,
-                        ),
+                      const Divider(height: 1, indent: 60),
+                      _SettingsTile(
+                        icon: Icons.rocket_outlined,
+                        title: 'My Bookings',
+                        subtitle: isLoggedIn
+                            ? 'View all your train bookings'
+                            : 'Login to view bookings',
+                        onTap: () {
+                          if (isLoggedIn) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const MyBookingsScreen(),
+                              ),
+                            );
+                          } else {
+                            _showLoginDialog();
+                          }
+                        },
                       ),
+                      if (isLoggedIn) ...[
+                        const Divider(height: 1, indent: 60),
+                        _SettingsTile(
+                          icon: Icons.logout,
+                          title: 'Logout',
+                          subtitle: 'Sign out from your account',
+                          onTap: () {
+                            _showLogoutDialog(context);
+                          },
+                          isDestructive: true,
+                        ),
+                      ],
                     ],
                   ),
                 ),
               ],
             ),
+    );
+  }
+
+  Widget _buildLoggedInProfile() {
+    return Row(
+      children: [
+        Container(
+          width: 70,
+          height: 70,
+          decoration: BoxDecoration(
+            color: kPrimary.withOpacity(0.1),
+            shape: BoxShape.circle,
           ),
-
-          const SizedBox(height: 8),
-
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: kCardBg,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: kPrimary.withOpacity(0.08),
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
+          child: const Icon(Icons.person, size: 40, color: kPrimary),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Welcome back,',
+                style: TextStyle(fontSize: 14, color: kTextMuted),
+              ),
+              Text(
+                fullName ?? "User",
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: kTextDark,
                 ),
-              ],
-            ),
-            child: Column(
-              children: [
-                _SettingsTile(
-                  icon: Icons.person_outline,
-                  title: 'Profile',
-                  subtitle: 'View and edit your profile information',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProfileScreen(),
-                      ),
-                    );
-                  },
+              ),
+              const SizedBox(height: 4),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.green.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                const Divider(height: 1, indent: 60),
-
-                _SettingsTile(
-                  icon: Icons.rocket_outlined,
-                  title: 'My Bookings',
-                  subtitle: 'View all your train bookings',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MyBookingsScreen(),
-                      ),
-                    );
-                  },
+                child: const Text(
+                  'Logged In',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.green,
+                  ),
                 ),
-                const Divider(height: 1, indent: 60),
-
-                _SettingsTile(
-                  icon: Icons.logout,
-                  title: 'Logout',
-                  subtitle: 'Sign out from your account',
-                  onTap: () {
-                    _showLogoutDialog(context);
-                  },
-                  isDestructive: true,
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLoggedOutProfile() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.person_outline,
+                size: 40,
+                color: Colors.grey.shade400,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Text(
+                      'Not Logged In',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.orange,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  SizedBox(
+                    width: 120,
+                    child: ElevatedButton(
+                      onPressed: _showLoginDialog,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: kPrimary,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      child: const Text(
+                        'Login ',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
   void _showLogoutDialog(BuildContext context) {
-    const primaryColor = Color(0xFF2A80D8);
-
     showDialog(
       context: context,
       builder: (context) {
@@ -194,25 +320,23 @@ class _SettingScreen extends State<SettingsScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
+                const Icon(Icons.logout, size: 50, color: kPrimary),
+                const SizedBox(height: 16),
+                const Text(
                   "Logout ?",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: primaryColor,
+                    color: kPrimary,
                   ),
                 ),
-
                 const SizedBox(height: 12),
-
                 const Text(
-                  "Are you sure.",
+                  "Are you sure you want to logout?",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 14),
                 ),
-
                 const SizedBox(height: 20),
-
                 Row(
                   children: [
                     Expanded(
@@ -221,20 +345,18 @@ class _SettingScreen extends State<SettingsScreen> {
                           Navigator.pop(context);
                         },
                         style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: primaryColor),
+                          side: const BorderSide(color: kPrimary),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         child: const Text(
                           "Cancel",
-                          style: TextStyle(color: primaryColor),
+                          style: TextStyle(color: kPrimary),
                         ),
                       ),
                     ),
-
                     const SizedBox(width: 12),
-
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
@@ -242,7 +364,7 @@ class _SettingScreen extends State<SettingsScreen> {
                           _logout(context);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: primaryColor,
+                          backgroundColor: kPrimary,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -264,27 +386,24 @@ class _SettingScreen extends State<SettingsScreen> {
   }
 
   void _logout(BuildContext context) async {
-    // Show loading indicator
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(color: kPrimary),
-      ),
+      builder: (context) =>
+          const Center(child: CircularProgressIndicator(color: kPrimary)),
     );
 
     try {
-      // Clear token from storage
       await TokenService.clearToken();
 
-      // Close loading dialog
       if (context.mounted) {
         Navigator.pop(context);
 
-        // Navigate to login screen using GoRouter
-        context.go('/setting/login');
+        setState(() {
+          isLoggedIn = false;
+          fullName = null;
+        });
 
-        // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Logged out successfully'),
@@ -294,10 +413,8 @@ class _SettingScreen extends State<SettingsScreen> {
         );
       }
     } catch (e) {
-      // Close loading dialog on error
       if (context.mounted) {
         Navigator.pop(context);
-
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error logging out: $e'),
@@ -307,9 +424,7 @@ class _SettingScreen extends State<SettingsScreen> {
       }
     }
   }
-
 }
-
 
 class _SettingsTile extends StatelessWidget {
   final IconData icon;
@@ -368,19 +483,12 @@ class _SettingsTile extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: kTextMuted,
-                      ),
+                      style: const TextStyle(fontSize: 13, color: kTextMuted),
                     ),
                   ],
                 ),
               ),
-              Icon(
-                Icons.chevron_right,
-                color: kTextMuted,
-                size: 24,
-              ),
+              Icon(Icons.chevron_right, color: kTextMuted, size: 24),
             ],
           ),
         ),

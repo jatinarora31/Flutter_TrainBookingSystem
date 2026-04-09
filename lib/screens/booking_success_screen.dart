@@ -35,7 +35,7 @@ class BookingSuccessScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Extract data from API response
+
     final message = apiResponse['message'] ?? 'Booking confirmed successfully';
     final booking = apiResponse['booking'] ?? {};
     final bookingRef = booking['booking_ref'] ?? 'BKG-${DateTime.now().millisecondsSinceEpoch}';
@@ -43,7 +43,6 @@ class BookingSuccessScreen extends StatelessWidget {
     final bookedAt = booking['booked_at'] ?? DateTime.now().toIso8601String();
     final totalFareFromApi = booking['total_fare'] ?? totalFare.toString();
 
-    // Extract schedule details if available
     final schedule = booking['schedule'] ?? {};
     final train = schedule['train'] ?? {};
     final trainName = train['name'] ?? 'Train';

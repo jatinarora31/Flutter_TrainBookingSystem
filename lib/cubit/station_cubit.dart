@@ -4,7 +4,9 @@ import 'package:quick_ticket/states/station_state.dart';
 
 class StationCubit extends Cubit<StationState> {
   final StationRepository repository;
-  StationCubit(this.repository) : super(StationInitial());
+  StationCubit(this.repository) : super(StationInitial()) {
+    fetchStations();
+  }
 
   Future<void> fetchStations() async {
     print("-------------FETCH CALLED--------------");
