@@ -1,8 +1,7 @@
+import 'package:QuickTicket/screens/widgets/profile_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:quick_ticket/network/token_service.dart';
-import 'package:quick_ticket/screens/auth/login_dialog.dart';
-import 'package:quick_ticket/screens/widgets/profile_screen.dart';
-
+import '../network/token_service.dart';
+import 'auth/login_dialog.dart';
 import 'booking_screen.dart';
 import 'my_booking_screen.dart';
 
@@ -278,21 +277,23 @@ class _SettingScreen extends State<SettingsScreen> {
                   ),
                   SizedBox(height: 5),
                   SizedBox(
-                    width: 120,
+                    width: 110,
                     child: ElevatedButton(
                       onPressed: _showLoginDialog,
                       style: ElevatedButton.styleFrom(
+                        shadowColor: kPrimary,
+                        elevation: 4,
                         backgroundColor: kPrimary,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: 8),
                       ),
                       child: const Text(
                         'Login ',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 20,
                           fontWeight: FontWeight.w600,
                         ),
                       ),

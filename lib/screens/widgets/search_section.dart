@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:quick_ticket/models/station.dart';
-import 'package:quick_ticket/repositories/schedule_repository.dart';
-import 'package:quick_ticket/screens/booking_screen.dart';
+import '../../models/station.dart';
+import '../../repositories/schedule_repository.dart';
+import '../booking_screen.dart';
 
 class SearchSection extends StatefulWidget {
   const SearchSection({super.key});
@@ -155,7 +155,7 @@ class _SearchSection extends State<SearchSection> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsGeometry.symmetric(horizontal: 10),
+      padding: const EdgeInsetsGeometry.symmetric(horizontal: 10,vertical: 15),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
@@ -176,21 +176,20 @@ class _SearchSection extends State<SearchSection> {
                         "Book Train Tickets",
                         style: TextStyle(
                           color: kPrimary,
-                          fontSize: 22,
-                          // fontStyle: FontStyle.italic,
+                          fontSize: 25,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.1,
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _Pill(label: "Fast"),
+                          _Pill(label: "Fast 🚀"),
                           const SizedBox(width: 6),
-                          _Pill(label: "Easy"),
+                          _Pill(label: "Easy ✋"),
                           const SizedBox(width: 6),
-                          _Pill(label: "Secure"),
+                          _Pill(label: "Secure 🔐"),
                         ],
                       ),
                     ],
@@ -270,6 +269,8 @@ class _SearchSection extends State<SearchSection> {
               child: ElevatedButton(
                 onPressed: () => _onSearch(),
                 style: ElevatedButton.styleFrom(
+                  shadowColor: kPrimary,
+                  elevation: 4,
                   backgroundColor: Color(0xFF2A80D8),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
@@ -280,7 +281,7 @@ class _SearchSection extends State<SearchSection> {
               ),
             ),
             SizedBox(height: 20),
-            Text("IRCTC Authorised Partner", style: TextStyle(color: Colors.black))
+            Text("☢  IRCTC Authorised Partner", style: TextStyle(color: Colors.black))
           ],
         ),
       ),

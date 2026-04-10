@@ -1,6 +1,6 @@
 // dio_client.dart
+import 'package:QuickTicket/network/token_service.dart';
 import 'package:dio/dio.dart';
-import 'package:quick_ticket/network/token_service.dart';
 
 class DioClient {
   static Dio getDio() {

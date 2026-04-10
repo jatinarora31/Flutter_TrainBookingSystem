@@ -1,7 +1,7 @@
 // booking_success_screen.dart
 import 'package:flutter/material.dart';
-import 'package:quick_ticket/screens/booking_screen.dart';
-import 'package:quick_ticket/screens/home_screen.dart';
+import 'booking_screen.dart';
+import 'home_screen.dart';
 
 class BookingSuccessScreen extends StatelessWidget {
   final Map<String, dynamic> apiResponse;

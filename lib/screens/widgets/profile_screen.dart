@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:quick_ticket/network/token_service.dart';
+
+import '../../network/token_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

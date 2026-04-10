@@ -1,9 +1,7 @@
+import 'package:QuickTicket/screens/widgets/app_bar.dart';
+import 'package:QuickTicket/screens/widgets/search_section.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:quick_ticket/screens/search_screen.dart';
-import 'package:quick_ticket/screens/widgets/app_bar.dart';
-import 'package:quick_ticket/screens/widgets/header_row.dart';
-import 'package:quick_ticket/screens/widgets/search_section.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

@@ -1,8 +1,7 @@
+import 'package:QuickTicket/repositories/station_repository.dart';
+import 'package:QuickTicket/router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quick_ticket/repositories/station_repository.dart';
-import 'package:quick_ticket/router/go_router.dart';
-
 import 'cubit/station_cubit.dart';
 import 'network/token_service.dart';
 

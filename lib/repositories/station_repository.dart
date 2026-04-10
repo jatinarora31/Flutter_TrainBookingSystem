@@ -1,6 +1,6 @@
-import 'package:quick_ticket/models/station.dart';
-import 'package:quick_ticket/network/api_service.dart';
-import 'package:quick_ticket/network/dio_client.dart';
+import '../models/station.dart';
+import '../network/api_service.dart';
+import '../network/dio_client.dart';
 
 class StationRepository {
   late final ApiService _api;

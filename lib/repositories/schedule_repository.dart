@@ -1,10 +1,8 @@
 
-import 'package:quick_ticket/models/schedule_response.dart';
-import 'package:quick_ticket/network/api_service.dart';
-import 'package:quick_ticket/network/dio_client.dart';
-
-import '../models/schedule_data.dart';
 import '../models/schedule_detail.dart';
+import '../models/schedule_response.dart';
+import '../network/api_service.dart';
+import '../network/dio_client.dart';
 
 class ScheduleRepository {
   late final ApiService _api;

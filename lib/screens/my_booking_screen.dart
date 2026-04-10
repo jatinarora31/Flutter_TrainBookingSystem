@@ -1,10 +1,9 @@
 // my_bookings_screen.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:quick_ticket/repositories/booking_repository.dart';
-import 'package:quick_ticket/network/token_service.dart';
-import 'package:quick_ticket/screens/auth/login_dialog.dart';
-
+import '../network/token_service.dart';
+import '../repositories/booking_repository.dart';
+import 'auth/login_dialog.dart';
 import 'booking_screen.dart';
 
 class MyBookingsScreen extends StatefulWidget {
@@ -67,14 +66,17 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
     } catch (e) {
       String error = e.toString().replaceAll('Exception: ', '');
 
-      if (error.contains('401') || error.contains('unauthorized') || error.contains('token')) {
+      if (error.contains('401') ||
+          error.contains('unauthorized') ||
+          error.contains('token')) {
         error = "Session expired. Please login again.";
         await TokenService.clearToken();
       } else if (error.contains('403')) {
         error = "You don't have permission to view bookings";
       } else if (error.contains('500')) {
         error = "Server error. Please try again later.";
-      } else if (error.contains('No token found') || error.contains('not logged in')) {
+      } else if (error.contains('No token found') ||
+          error.contains('not logged in')) {
         error = "Please login to view your bookings";
         setState(() {
           isLoggedIn = false;
@@ -124,180 +126,211 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
       backgroundColor: Color(0xFFEDEDED),
       appBar: AppBar(
         shape: const Border(
-          bottom: BorderSide(
-            color: Colors.black,
-            width:0.1
-          )
+          bottom: BorderSide(color: Colors.black, width: 0.1),
         ),
         toolbarOpacity: 0.8,
         centerTitle: true,
         title: const Text(
           'My Bookings',
-          style: TextStyle(
-            fontWeight: FontWeight.w400,
-          ),
+          style: TextStyle(fontWeight: FontWeight.w400),
         ),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
       ),
       body: isLoading
-          ? const Center(
-        child: CircularProgressIndicator(color: kPrimary),
-      )
+          ? const Center(child: CircularProgressIndicator(color: kPrimary))
           : errorMessage != null
           ? _buildErrorView()
           : Column(
-        children: [
-          if (upcomingBookings.isNotEmpty || pastBookings.isNotEmpty)
-            Container(
-              height: 50,
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedTabIndex = 0;
-                        });
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        decoration: BoxDecoration(
-                          color: _selectedTabIndex == 0 ? kPrimary : Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(color: kPrimary),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.upcoming,
-                              size: 18,
-                              color: _selectedTabIndex == 0 ? Colors.white : kPrimary,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Upcoming',
-                              style: TextStyle(
-                                color: _selectedTabIndex == 0 ? Colors.white : kPrimary,
-                                fontWeight: FontWeight.w600,
+              children: [
+                if (upcomingBookings.isNotEmpty || pastBookings.isNotEmpty)
+                  Container(
+                    height: 50,
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 15,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedTabIndex = 0;
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: _selectedTabIndex == 0
+                                    ? kPrimary
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(color: kPrimary),
                               ),
-                            ),
-                            if (_selectedTabIndex == 0 && upcomingBookings.isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: _selectedTabIndex == 0 ? Colors.white : kPrimary,
-                                    borderRadius: BorderRadius.circular(12),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.upcoming,
+                                    size: 18,
+                                    color: _selectedTabIndex == 0
+                                        ? Colors.white
+                                        : kPrimary,
                                   ),
-                                  child: Text(
-                                    '${upcomingBookings.length}',
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'Upcoming',
                                     style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.bold,
-                                      color: _selectedTabIndex == 0 ? kPrimary : Colors.white,
+                                      color: _selectedTabIndex == 0
+                                          ? Colors.white
+                                          : kPrimary,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedTabIndex = 1;
-                        });
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        decoration: BoxDecoration(
-                          color: _selectedTabIndex == 1 ? kPrimary : Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(color: kPrimary),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.history,
-                              size: 18,
-                              color: _selectedTabIndex == 1 ? Colors.white : kPrimary,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Past',
-                              style: TextStyle(
-                                color: _selectedTabIndex == 1 ? Colors.white : kPrimary,
-                                fontWeight: FontWeight.w600,
+                                  if (_selectedTabIndex == 0 &&
+                                      upcomingBookings.isNotEmpty)
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 6,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: _selectedTabIndex == 0
+                                              ? Colors.white
+                                              : kPrimary,
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          '${upcomingBookings.length}',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.bold,
+                                            color: _selectedTabIndex == 0
+                                                ? kPrimary
+                                                : Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
                               ),
                             ),
-                            if (_selectedTabIndex == 1 && pastBookings.isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: _selectedTabIndex == 1 ? Colors.white : kPrimary,
-                                    borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedTabIndex = 1;
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: _selectedTabIndex == 1
+                                    ? kPrimary
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(color: kPrimary),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.history,
+                                    size: 18,
+                                    color: _selectedTabIndex == 1
+                                        ? Colors.white
+                                        : kPrimary,
                                   ),
-                                  child: Text(
-                                    '${pastBookings.length}',
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'Past',
                                     style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.bold,
-                                      color: _selectedTabIndex == 1 ? kPrimary : Colors.white,
+                                      color: _selectedTabIndex == 1
+                                          ? Colors.white
+                                          : kPrimary,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                ),
+                                  if (_selectedTabIndex == 1 &&
+                                      pastBookings.isNotEmpty)
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 6,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: _selectedTabIndex == 1
+                                              ? Colors.white
+                                              : kPrimary,
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          '${pastBookings.length}',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.bold,
+                                            color: _selectedTabIndex == 1
+                                                ? kPrimary
+                                                : Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
                               ),
-                          ],
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
 
-          Expanded(
-            child: _selectedTabIndex == 0
-                ? (upcomingBookings.isEmpty
-                ? _buildEmptyView('No upcoming bookings', Icons.upcoming)
-                : RefreshIndicator(
-              onRefresh: _fetchBookings,
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: upcomingBookings.length,
-                itemBuilder: (context, index) {
-                  final booking = upcomingBookings[index];
-                  return _BookingCard(booking: booking);
-                },
-              ),
-            ))
-                : (pastBookings.isEmpty
-                ? _buildEmptyView('No past bookings', Icons.history)
-                : RefreshIndicator(
-              onRefresh: _fetchBookings,
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: pastBookings.length,
-                itemBuilder: (context, index) {
-                  final booking = pastBookings[index];
-                  return _BookingCard(booking: booking);
-                },
-              ),
-            )),
-          ),
-        ],
-      ),
+                Expanded(
+                  child: _selectedTabIndex == 0
+                      ? (upcomingBookings.isEmpty
+                            ? _buildEmptyView(
+                                'No upcoming bookings',
+                                Icons.upcoming,
+                              )
+                            : RefreshIndicator(
+                                onRefresh: _fetchBookings,
+                                child: ListView.builder(
+                                  padding: const EdgeInsets.all(16),
+                                  itemCount: upcomingBookings.length,
+                                  itemBuilder: (context, index) {
+                                    final booking = upcomingBookings[index];
+                                    return _BookingCard(booking: booking);
+                                  },
+                                ),
+                              ))
+                      : (pastBookings.isEmpty
+                            ? _buildEmptyView('No past bookings', Icons.history)
+                            : RefreshIndicator(
+                                onRefresh: _fetchBookings,
+                                child: ListView.builder(
+                                  padding: const EdgeInsets.all(16),
+                                  itemCount: pastBookings.length,
+                                  itemBuilder: (context, index) {
+                                    final booking = pastBookings[index];
+                                    return _BookingCard(booking: booking);
+                                  },
+                                ),
+                              )),
+                ),
+              ],
+            ),
     );
   }
 
@@ -309,9 +342,9 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-              isNotLoggedIn ? Icons.lock_outline : Icons.error_outline,
-              size: 64,
-              color: kTextMuted
+            isNotLoggedIn ? Icons.lock_outline : Icons.error_outline,
+            size: 64,
+            color: kTextMuted,
           ),
           const SizedBox(height: 16),
           Text(
@@ -319,18 +352,26 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
             style: const TextStyle(color: kTextMuted),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 18),
           if (isNotLoggedIn)
             ElevatedButton(
               onPressed: () {
                 _showLoginDialog();
               },
               style: ElevatedButton.styleFrom(
+                shadowColor: kPrimary,
+                elevation: 4,
                 backgroundColor: kPrimary,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 20),
               ),
-              child: const Text('Login Now'),
+              child: const Text(
+                'Login ',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+              ),
             )
           else
             ElevatedButton(
@@ -365,18 +406,11 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 64,
-            color: kTextMuted.withOpacity(0.5),
-          ),
+          Icon(icon, size: 64, color: kTextMuted.withOpacity(0.5)),
           const SizedBox(height: 16),
           Text(
             message,
-            style: const TextStyle(
-              fontSize: 16,
-              color: kTextMuted,
-            ),
+            style: const TextStyle(fontSize: 16, color: kTextMuted),
           ),
           const SizedBox(height: 16),
           ElevatedButton(
@@ -395,7 +429,6 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
   }
 }
 
-// Rest of the _BookingCard class remains the same...
 class _BookingCard extends StatelessWidget {
   final Map<String, dynamic> booking;
 
@@ -413,7 +446,8 @@ class _BookingCard extends StatelessWidget {
 
     final travelDate = DateTime.parse(schedule['travel_date']);
     final now = DateTime.now();
-    final isUpcoming = travelDate.isAfter(now) && booking['status'] != 'cancelled';
+    final isUpcoming =
+        travelDate.isAfter(now) && booking['status'] != 'cancelled';
     final isCancelled = booking['status'] == 'cancelled';
 
     return Container(
@@ -432,7 +466,6 @@ class _BookingCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header with status and booking ref
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -445,7 +478,10 @@ class _BookingCard extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: isCancelled
                         ? Colors.red
@@ -455,7 +491,9 @@ class _BookingCard extends StatelessWidget {
                     borderRadius: const BorderRadius.all(Radius.circular(12)),
                   ),
                   child: Text(
-                    isCancelled ? 'CANCELLED' : (isUpcoming ? 'UPCOMING' : 'COMPLETED'),
+                    isCancelled
+                        ? 'CANCELLED'
+                        : (isUpcoming ? 'UPCOMING' : 'COMPLETED'),
                     style: const TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
@@ -513,10 +551,7 @@ class _BookingCard extends StatelessWidget {
                           ),
                           Text(
                             '${train['train_number']} • ${train['train_type']}',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: kTextMuted,
-                            ),
+                            style: TextStyle(fontSize: 12, color: kTextMuted),
                           ),
                         ],
                       ),
@@ -542,10 +577,7 @@ class _BookingCard extends StatelessWidget {
                           ),
                           Text(
                             srcStation['name'],
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: kTextMuted,
-                            ),
+                            style: TextStyle(fontSize: 12, color: kTextMuted),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -564,11 +596,11 @@ class _BookingCard extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(
-                            _formatDuration(schedule['departure_time'], schedule['expected_arrival_time']),
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: kTextMuted,
+                            _formatDuration(
+                              schedule['departure_time'],
+                              schedule['expected_arrival_time'],
                             ),
+                            style: TextStyle(fontSize: 11, color: kTextMuted),
                           ),
                           const SizedBox(height: 4),
                           Row(
@@ -580,7 +612,9 @@ class _BookingCard extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                ),
                                 child: Icon(
                                   Icons.arrow_forward_rounded,
                                   color: kPrimary,
@@ -612,10 +646,7 @@ class _BookingCard extends StatelessWidget {
                           ),
                           Text(
                             dstStation['name'],
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: kTextMuted,
-                            ),
+                            style: TextStyle(fontSize: 12, color: kTextMuted),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -642,20 +673,14 @@ class _BookingCard extends StatelessWidget {
                     const SizedBox(width: 6),
                     Text(
                       _formatDate(schedule['travel_date']),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: kTextMuted,
-                      ),
+                      style: TextStyle(fontSize: 12, color: kTextMuted),
                     ),
                     const SizedBox(width: 16),
                     Icon(Icons.people_rounded, size: 14, color: kTextMuted),
                     const SizedBox(width: 6),
                     Text(
                       '${passengers.length} Passenger${passengers.length > 1 ? 's' : ''}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: kTextMuted,
-                      ),
+                      style: TextStyle(fontSize: 12, color: kTextMuted),
                     ),
                   ],
                 ),
@@ -668,13 +693,16 @@ class _BookingCard extends StatelessWidget {
                   children: List.generate(passengers.length, (index) {
                     final passenger = passengers[index];
                     final allocation = ticketAllocations.firstWhere(
-                          (a) => a['passenger_id'] == passenger['id'],
+                      (a) => a['passenger_id'] == passenger['id'],
                       orElse: () => ticketAllocations[0],
                     );
                     final seat = allocation['seat'];
 
                     return Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: kPrimary.withOpacity(0.07),
                         borderRadius: BorderRadius.circular(12),
@@ -726,7 +754,11 @@ class _BookingCard extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.confirmation_number, size: 18, color: kPrimary),
+                      Icon(
+                        Icons.confirmation_number,
+                        size: 18,
+                        color: kPrimary,
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         'PNR: ${ticketAllocations[0]['pnr']}',
@@ -756,10 +788,13 @@ class _BookingCard extends StatelessWidget {
                       Row(
                         children: [
                           Icon(
-                            payment['payment_method'] == 'UPI' ? Icons.qr_code_scanner_rounded :
-                            payment['payment_method'] == 'CARD' ? Icons.credit_card :
-                            payment['payment_method'] == 'NET BANKING' ? Icons.account_balance :
-                            Icons.payment,
+                            payment['payment_method'] == 'UPI'
+                                ? Icons.qr_code_scanner_rounded
+                                : payment['payment_method'] == 'CARD'
+                                ? Icons.credit_card
+                                : payment['payment_method'] == 'NET BANKING'
+                                ? Icons.account_balance
+                                : Icons.payment,
                             size: 18,
                             color: kPrimary,
                           ),
@@ -805,15 +840,23 @@ class _BookingCard extends StatelessWidget {
   }
 
   String _getSeatTypeName(String seatType) {
-    switch(seatType) {
-      case 'A': return 'AC';
-      case 'B': return 'Sleeper';
-      case 'C': return 'Chair';
-      case 'LB': return 'Lower Berth';
-      case 'UB': return 'Upper Berth';
-      case 'MB': return 'Middle Berth';
-      case 'W': return 'Window';
-      default: return seatType;
+    switch (seatType) {
+      case 'A':
+        return 'AC';
+      case 'B':
+        return 'Sleeper';
+      case 'C':
+        return 'Chair';
+      case 'LB':
+        return 'Lower Berth';
+      case 'UB':
+        return 'Upper Berth';
+      case 'MB':
+        return 'Middle Berth';
+      case 'W':
+        return 'Window';
+      default:
+        return seatType;
     }
   }
 
@@ -821,8 +864,19 @@ class _BookingCard extends StatelessWidget {
     final parts = date.split('-');
     if (parts.length < 3) return date;
     const months = [
-      '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      '',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     final month = months[int.tryParse(parts[1]) ?? 0];
     return '${parts[2]} $month ${parts[0]}';

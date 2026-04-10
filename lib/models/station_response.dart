@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:quick_ticket/models/station.dart';
+import 'package:QuickTicket/models/station.dart';
 
 part 'station_response.g.dart';
 

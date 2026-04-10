@@ -1,7 +1,6 @@
-// passenger_details_screen.dart
-import 'package:flutter/material.dart';
-import 'package:quick_ticket/repositories/booking_repository.dart';
 
+import 'package:flutter/material.dart';
+import '../repositories/booking_repository.dart';
 import 'booking_success_screen.dart';
 import 'booking_screen.dart';
 
@@ -427,15 +426,6 @@ class _PassengerDetailsScreenState extends State<PassengerDetailsScreen> {
         );
         return;
       }
-
-      // showDialog(
-      //   context: context,
-      //   barrierDismissible: false,
-      //   builder: (context) => const Center(
-      //     child: CircularProgressIndicator(color: kPrimary),
-      //   ),
-      // );
-
       try {
         final bookingData = {
           "booking": {

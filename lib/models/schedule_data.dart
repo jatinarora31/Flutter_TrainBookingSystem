@@ -1,6 +1,5 @@
+import 'package:QuickTicket/models/schedule_detail.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:quick_ticket/models/schedule_detail.dart';
-
 part 'schedule_data.g.dart';
 
 @JsonSerializable()

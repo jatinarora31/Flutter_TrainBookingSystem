@@ -1,5 +1,5 @@
+import 'package:QuickTicket/models/seat.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:quick_ticket/models/seat.dart';
 
 part 'coach.g.dart';
 

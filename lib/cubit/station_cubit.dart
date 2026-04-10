@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:quick_ticket/repositories/station_repository.dart';
-import 'package:quick_ticket/states/station_state.dart';
+import '../repositories/station_repository.dart';
+import '../states/station_state.dart';
 
 class StationCubit extends Cubit<StationState> {
   final StationRepository repository;

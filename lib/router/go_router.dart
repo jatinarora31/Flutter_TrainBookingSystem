@@ -1,15 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:quick_ticket/screens/booking_screen.dart';
-import 'package:quick_ticket/screens/setting_screen.dart';
-import '../network/token_service.dart';
-import '../screens/auth/login_screen.dart';
-import '../screens/auth/register_screen.dart';
+import '../screens/booking_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/main_screen.dart';
 import '../screens/my_booking_screen.dart';
 import '../screens/schedule_screen.dart';
 import '../screens/search_screen.dart';
+import '../screens/setting_screen.dart';
 import '../screens/widgets/profile_screen.dart';
 
 final GoRouter appRouter = GoRouter(

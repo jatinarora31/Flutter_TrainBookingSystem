@@ -1,6 +1,6 @@
+import 'package:QuickTicket/models/train.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:quick_ticket/models/availability.dart';
-import 'package:quick_ticket/models/train.dart';
+import 'availability.dart';
 
 part 'schedule.g.dart';
 

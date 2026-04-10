@@ -1,11 +1,11 @@
+import 'package:QuickTicket/screens/widgets/app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:quick_ticket/cubit/station_cubit.dart';
-import 'package:quick_ticket/screens/booking_screen.dart';
-import 'package:quick_ticket/screens/widgets/app_bar.dart';
-import 'package:quick_ticket/states/station_state.dart';
+import '../cubit/station_cubit.dart';
+import '../states/station_state.dart';
+import 'booking_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   final String type;
@@ -28,6 +28,7 @@ class _SearchScreen extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFEDEDED),
       appBar: AppBarSection(title: "Search"),
       body: Column(
         children: [

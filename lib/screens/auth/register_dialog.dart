@@ -1,9 +1,8 @@
 // register_dialog.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:quick_ticket/screens/booking_screen.dart';
 import '../../auth/auth_service.dart';
-import '../widgets/app_bar.dart';
+import '../booking_screen.dart';
 import 'login_dialog.dart';
 
 class RegisterDialog extends StatefulWidget {

@@ -1,5 +1,5 @@
-  import 'package:flutter/material.dart';
-import 'package:quick_ticket/screens/passenger_details.dart';
+  import 'package:QuickTicket/screens/passenger_details.dart';
+import 'package:flutter/material.dart';
   import '../models/availability.dart';
   import '../models/coach.dart';
   import '../models/fare.dart';

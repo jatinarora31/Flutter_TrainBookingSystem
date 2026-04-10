@@ -1,5 +1,5 @@
+import 'package:QuickTicket/models/train_info.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:quick_ticket/models/train_info.dart';
 
 part 'schedule_info.g.dart';
 

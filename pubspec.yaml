@@ -1,4 +1,4 @@
-name: quick_ticket
+name: QuickTicket
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -55,6 +55,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: "^0.14.1"
   json_serializable: ^6.13.1
   build_runner: ^2.13.1
 
@@ -68,6 +69,11 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+flutter_icons:
+  android: true   # Generate icons for Android
+  ios: true       # Generate icons for iOS
+  image_path: "assets/icons/app_icon.png" # Path to your icon image
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -1,7 +1,6 @@
 // booking_repository.dart
-import 'package:quick_ticket/models/booking_response.dart';
-import 'package:quick_ticket/network/api_service.dart';
-import 'package:quick_ticket/network/dio_client.dart';
+import '../network/api_service.dart';
+import '../network/dio_client.dart';
 
 class BookingRepository {
   late final ApiService _api;

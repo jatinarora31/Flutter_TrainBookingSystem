@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:quick_ticket/models/schedule.dart';
+import 'package:QuickTicket/models/schedule.dart';
 
 part 'schedule_response.g.dart';
 

@@ -1,8 +1,7 @@
+import 'package:QuickTicket/models/schedule_info.dart';
+import 'package:QuickTicket/models/seat_map.dart';
+import 'package:QuickTicket/models/stop.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:quick_ticket/models/schedule_info.dart';
-import 'package:quick_ticket/models/seat.dart';
-import 'package:quick_ticket/models/seat_map.dart';
-import 'package:quick_ticket/models/stop.dart';
 import 'availability.dart';
 import 'coach.dart';
 import 'fare.dart';

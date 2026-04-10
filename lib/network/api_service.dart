@@ -1,12 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:quick_ticket/models/booking_response.dart';
-import 'package:quick_ticket/models/schedule_response.dart';
-import 'package:quick_ticket/models/station_response.dart';
 import 'package:retrofit/error_logger.dart';
 import 'package:retrofit/http.dart';
-
-import '../models/schedule_data.dart';
 import '../models/schedule_detail.dart';
+import '../models/schedule_response.dart';
+import '../models/station_response.dart';
 
 part 'api_service.g.dart';
 //192.168.0.105

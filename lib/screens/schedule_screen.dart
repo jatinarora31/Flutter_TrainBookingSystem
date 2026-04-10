@@ -1,5 +1,5 @@
+import 'package:QuickTicket/screens/widgets/train_card.dart';
 import 'package:flutter/material.dart';
-import 'package:quick_ticket/screens/widgets/train_card.dart';
 import '../models/schedule.dart';
 import '../models/schedule_response.dart';
 import '../repositories/schedule_repository.dart';

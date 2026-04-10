@@ -20,7 +20,7 @@ class AppBarSection extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       centerTitle: true,
       title: const Text(
-        "Quick Ticket",
+        "Quick Ticket 🎫",
         style: TextStyle(
           color: Colors.black,
           fontSize: 24,
