@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quick_ticket/repositories/booking_repository.dart';
 import 'package:quick_ticket/network/token_service.dart';
-import 'package:quick_ticket/screens/widgets/login_dialog.dart';
+import 'package:quick_ticket/screens/auth/login_dialog.dart';
 
 import 'booking_screen.dart';
 

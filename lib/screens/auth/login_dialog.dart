@@ -1,7 +1,7 @@
 // login_dialog.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:quick_ticket/screens/widgets/register_dialog.dart';
+import 'package:quick_ticket/screens/auth/register_dialog.dart';
 import '../../auth/auth_service.dart';
 import '../booking_screen.dart';
 

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:quick_ticket/network/token_service.dart';
 import '../../models/schedule.dart';
 import '../schedule_screen.dart';
+import '../auth/login_dialog.dart';
 
 class TrainCard extends StatelessWidget {
   final Schedule schedule;
@@ -48,106 +49,7 @@ class TrainCard extends StatelessWidget {
     }
   }
 
-  void _showLoginDialog(BuildContext context) {
-    const primaryColor = Color(0xFF2A80D8);
-
-    final bookingData = {
-      'scheduleId': schedule.id,
-      'srcStationId': srcStationId,
-      'dstStationId': dstStationId,
-      'srcStationName': srcStationName,
-      'dstStationName': dstStationName,
-      'travelDate': travelDate,
-    };
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "Login Required",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: primaryColor,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  "Please login to continue booking.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: primaryColor),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: const Text(
-                          "Cancel",
-                          style: TextStyle(color: primaryColor),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          context.push(
-                            '/login',
-                            extra: {
-                              'redirect': '/home/schedules/book',
-                              'data': bookingData,
-                            },
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _onContinue(BuildContext context) async {
-    final token = await TokenService.getToken();
-    if (token == null) {
-      _showLoginDialog(context);
-      return;
-    }
-    // Use the correct nested path - note: no leading slash
+  void _navigateToBooking(BuildContext context) {
     context.push(
       '/home/schedules/book',
       extra: {
@@ -159,6 +61,27 @@ class TrainCard extends StatelessWidget {
         'travelDate': travelDate,
       },
     );
+  }
+
+  void _onContinue(BuildContext context) async {
+    final token = await TokenService.getToken();
+
+    if (token == null) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return LoginDialog(
+            onLoginSuccess: () {
+              _navigateToBooking(context);
+            },
+          );
+        },
+      );
+      return;
+    }
+
+    _navigateToBooking(context);
   }
 
   @override
@@ -367,38 +290,6 @@ class TrainCard extends StatelessWidget {
               ],
             ),
           ),
-
-          // if (schedule.delayMinutes > 0)
-          //   Container(
-          //     width: double.infinity,
-          //     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          //     decoration: const BoxDecoration(
-          //       color: Color(0xFFFFFBEB),
-          //       borderRadius: BorderRadius.only(
-          //         bottomLeft: Radius.circular(18),
-          //         bottomRight: Radius.circular(18),
-          //       ),
-          //     ),
-          //     child: Row(
-          //       children: [
-          //         const Icon(
-          //           Icons.access_time,
-          //           size: 14,
-          //           color: Color(0xFFD97706),
-          //         ),
-          //         const SizedBox(width: 6),
-          //         Text(
-          //           // "Delayed by ${schedule.delayMinutes} min",
-          //           "",
-          //           style: const TextStyle(
-          //             color: Color(0xFFD97706),
-          //             fontSize: 12,
-          //             fontWeight: FontWeight.w600,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
         ],
       ),
     );

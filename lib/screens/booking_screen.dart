@@ -569,115 +569,127 @@ import 'package:quick_ticket/screens/passenger_details.dart';
       }
     }
 
+    void _handleCardTap() {
+      if (coaches.isEmpty) return;
+
+      // Always select the first coach when card is tapped
+      // This allows changing selection even if another coach was already selected
+      final firstCoach = coaches.first;
+      onCoachSelected(firstCoach);
+    }
+
     @override
     Widget build(BuildContext context) {
       final isAnySelected = coaches.any((c) => c.id == selectedCoachId);
 
-      return Container(
-        margin: const EdgeInsets.only(bottom: 14),
-        decoration: BoxDecoration(
-          color: kCardBg,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: isAnySelected ? kPrimary : Colors.transparent,
-            width: 2,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: kPrimary.withOpacity(0.07),
-              blurRadius: 16,
-              offset: const Offset(0, 4),
+      return GestureDetector(
+        onTap: _handleCardTap,
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 14),
+          decoration: BoxDecoration(
+            color: kCardBg,
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(
+              color: isAnySelected ? kPrimary : Colors.transparent,
+              width: 2,
             ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
-              child: Row(
-                children: [
-                  Container(
-                    width: 42,
-                    height: 42,
-                    decoration: BoxDecoration(
-                      color: _typeColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: kPrimary.withOpacity(0.07),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 42,
+                      height: 42,
+                      decoration: BoxDecoration(
+                        color: _typeColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(_typeIcon, color: _typeColor, size: 22),
                     ),
-                    child: Icon(_typeIcon, color: _typeColor, size: 22),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _typeLabel,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 15,
+                              color: kTextDark,
+                            ),
+                          ),
+                          Text(
+                            '$availableSeats seats available',
+                            style: TextStyle(
+                              color: availableSeats > 0
+                                  ? kSuccess
+                                  : kDanger,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          _typeLabel,
+                          '₹${farePerSeat.toStringAsFixed(0)}',
                           style: const TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 15,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 18,
                             color: kTextDark,
                           ),
                         ),
-                        Text(
-                          '$availableSeats seats available',
-                          style: TextStyle(
-                            color: availableSeats > 0
-                                ? kSuccess
-                                : kDanger,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        const Text(
+                          'per seat',
+                          style: TextStyle(color: kTextMuted, fontSize: 11),
                         ),
                       ],
                     ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        '₹${farePerSeat.toStringAsFixed(0)}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 18,
-                          color: kTextDark,
-                        ),
-                      ),
-                      const Text(
-                        'per seat',
-                        style: TextStyle(color: kTextMuted, fontSize: 11),
-                      ),
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Divider(color: Colors.grey.shade100, height: 1),
-            ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Divider(color: Colors.grey.shade100, height: 1),
+              ),
 
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 10, 16, 14),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: coaches
-                          .map((coach) => _CoachChip(
-                        coach: coach,
-                        isSelected: coach.id == selectedCoachId,
-                        onTap: () => onCoachSelected(coach),
-                      ))
-                          .toList(),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 10, 16, 14),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: coaches
+                            .map((coach) => _CoachChip(
+                          coach: coach,
+                          isSelected: coach.id == selectedCoachId,
+                          onTap: () => onCoachSelected(coach),
+                        ))
+                            .toList(),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }

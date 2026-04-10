@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quick_ticket/network/token_service.dart';
-import 'package:quick_ticket/screens/widgets/login_dialog.dart';
+import 'package:quick_ticket/screens/auth/login_dialog.dart';
 import 'package:quick_ticket/screens/widgets/profile_screen.dart';
 
 import 'booking_screen.dart';
